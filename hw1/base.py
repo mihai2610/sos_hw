@@ -8,13 +8,6 @@ class Action(object):
 	pass
 
 
-class Perception(object):
-	"""
-	Base class to be implemented by classes representing the totality of an agent's perceptions at a point in time.
-	"""
-	pass
-
-
 class Agent(object):
 	"""
 	Base class to be implemented by agent implementations. A reactive agent is only defined by its Agent @ to
@@ -33,15 +26,10 @@ class Agent(object):
 
 	def response(self, perception: List[List[object]]) -> int:
 		"""
-		Supplies the agent with perceptions and demands one action from the agent. The environment also specifies if the
-		previous action of the agent has succeeded or not.
+		Supplies the agent with perceptions and demands one action from the agent.
 
 		:param perception: the perceptions offered by the environment to the agent.
 		:return: he agent output, containing the action to perform. Action should be of type
-		{@link blocksworld.BlocksWorldAction.Type#NONE} if the agent is not performing an action now,
-		but may perform more actions in the future.
-		Action should be of type {@link blocksworld.BlocksWorldAction.Type#AGENT_COMPLETED} if the agent will not
-		perform any more actions ever in the future.
 		"""
 		raise NotImplementedError("Missing a response")
 

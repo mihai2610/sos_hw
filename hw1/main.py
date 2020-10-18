@@ -2,15 +2,6 @@ from hw1.base import Agent, Environment
 from hw1.agents import PascalAgent
 from typing import Callable, List
 
-
-# class PascalPerception(Perception):
-#
-# 	def __init__(self, stack: List[Agent]):
-# 		super(PascalPerception, self).__init__()
-#
-# 		self.stack = stack
-
-
 class PascalEnvironment(Environment):
 
 	def __init__(self, n_rows: int):
@@ -62,7 +53,7 @@ class PascalEnvironment(Environment):
 
 
 if __name__ == '__main__':
-	n = 10
+	n = 8
 	pascal_env = PascalEnvironment(n_rows=n)
 
 	next_step = True
