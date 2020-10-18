@@ -44,11 +44,16 @@ def main():
 	screen = init_screen()
 	environment = Environment(radius=10, screen=screen)
 
+	for i in range(10, SCREEN_SIZE, 20):
+		environment.add_obstacle(10, i)
+		environment.add_obstacle(SCREEN_SIZE - 10, i)
+		environment.add_obstacle(i, SCREEN_SIZE - 10)
+		environment.add_obstacle(i, 10)
+
 	# Used to manage how fast the screen updates
 	clock = pygame.time.Clock()
 
 	while running:
-
 		# handle the event
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -64,9 +69,9 @@ def main():
 					environment.add_obstacle(mouse[0], mouse[1])
 
 				print(pygame.mouse.get_pos())
-				print("ce huinea")
 
 		screen.fill(WHITE)
+
 		for agent in environment.agents:
 			agent.draw()
 
