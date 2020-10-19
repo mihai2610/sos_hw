@@ -5,7 +5,7 @@ import pygame
 
 class Obstacle(Agent):
 
-	def __init__(self, screen, x, y, name, radius=0):
+	def __init__(self, screen, x, y, name, radius=2):
 		super().__init__(screen, x, y, name, radius)
 
 	def draw(self):

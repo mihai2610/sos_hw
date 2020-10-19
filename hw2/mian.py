@@ -73,6 +73,9 @@ def main():
 		screen.fill(WHITE)
 
 		for agent in environment.agents:
+			if agent.name == BOID_NAME:
+				agent.check_collision(environment.agents)
+
 			agent.draw()
 
 		# Flip the display

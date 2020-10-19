@@ -16,6 +16,7 @@ class Environment:
 
 	def add_boid(self, mouse_x, mouse_y):
 		direction = uniform(0, MAX_RADIANS)
+		direction = 2.2
 		boid = Boid(self.screen, mouse_x, mouse_y, BOID_NAME, self.radius, direction)
 		self.agents.append(boid)
 

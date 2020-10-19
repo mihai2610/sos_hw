@@ -3,6 +3,7 @@ from hw2.common import *
 import pygame
 import math
 from random import uniform
+from typing import List
 
 
 class Boid(Agent):
@@ -11,8 +12,19 @@ class Boid(Agent):
 		super().__init__(screen, x, y, name, radius)
 		self.direction = direction
 		self.speed = 1
-
 		self.nr_ticks = 0
+
+	def check_collision(self, observation: List[Agent]):
+		for agent in observation:
+			new_x = self.x + self.speed * math.cos(self.direction)
+			new_y = self.y + self.speed * math.sin(self.direction)
+			if agent.x != self.x or agent.y != self.y:
+				if abs(agent.x - new_x) <= self.radius * 2 and abs(agent.y - new_y) <= self.radius * 2:
+					if agent.x == SCREEN_SIZE - agent.radius or agent.x == agent.radius:
+						self.direction = (MAX_RADIANS - self.direction) - MAX_RADIANS / 2
+					else:
+						self.direction = MAX_RADIANS - self.direction
+					self.nr_ticks = 0
 
 	def draw(self):
 		self.update_position()
@@ -45,6 +57,6 @@ class Boid(Agent):
 		self.y += self.speed * math.sin(self.direction)
 		self.nr_ticks += 1
 
-		if self.nr_ticks == 10:
-			self.update_direction()
-			self.nr_ticks = 0
+		# if self.nr_ticks == 10:
+		# 	self.update_direction()
+		# 	self.nr_ticks = 0
