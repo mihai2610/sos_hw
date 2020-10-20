@@ -18,7 +18,7 @@ ticks, fps = 0, 0
 
 
 def init_screen():
-	screen = pygame.display.set_mode([750, 750])
+	screen = pygame.display.set_mode([SCREEN_SIZE, SCREEN_SIZE])
 	screen.fill(WHITE)
 	return screen
 
@@ -68,13 +68,14 @@ def main():
 					mouse = pygame.mouse.get_pos()
 					environment.add_obstacle(mouse[0], mouse[1])
 
-				print(pygame.mouse.get_pos())
+				# print(pygame.mouse.get_pos())
 
 		screen.fill(WHITE)
 
 		for agent in environment.agents:
 			if agent.name == BOID_NAME:
 				agent.check_collision(environment.agents)
+				agent.apply_rules(environment.agents)
 
 			agent.draw()
 
