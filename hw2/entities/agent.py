@@ -37,7 +37,7 @@ class Boid(Agent):
 		avg_vec = vec(0, 0)
 		count = 0
 		for agent in agents:
-			if agent.name == BOID_NAME:
+			if agent.name == BOID_NAME and agent != self:
 				if np.linalg.norm(agent.position - self.position) < self.perception:
 					avg_vec += agent.velocity
 					count += 1
@@ -54,7 +54,7 @@ class Boid(Agent):
 		avg_position = vec(0, 0)
 
 		for agent in agents:
-			if agent.name == BOID_NAME:
+			if agent.name == BOID_NAME and agent != self:
 				if np.linalg.norm(agent.position - self.position) < self.perception:
 					avg_position += agent.position
 					count += 1
@@ -72,24 +72,16 @@ class Boid(Agent):
 		return steering
 
 	def separation(self, agents: List[Agent]):
-		steering = vec(*np.zeros(2))
 		count = 0
-		avg_vector = vec(*np.zeros(2))
+		avg_vector = vec(0, 0)
 		for agent in agents:
-			if agent.name == BOID_NAME:
+			if agent != self:
 				distance = np.linalg.norm(agent.position - self.position)
 				if self.position != agent.position and distance < self.perception:
 					avg_vector += (self.position - agent.position) / distance
 					count += 1
-		if count > 0:
-			avg_vector /= count
-			if np.linalg.norm(steering) > 0:
-				avg_vector = (avg_vector / np.linalg.norm(steering)) * self.max_speed
-			steering = avg_vector - self.velocity
-			if np.linalg.norm(steering) > self.max_force:
-				steering = (steering / np.linalg.norm(steering)) * self.max_force
 
-		return steering
+		return avg_vector
 
 	def apply_rules(self, agents: List[Agent]):
 		self.acceleration += self.align(agents)
