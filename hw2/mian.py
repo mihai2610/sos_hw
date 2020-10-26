@@ -1,20 +1,12 @@
 import pygame
 import sys
-from math import pi, cos, sin, sqrt
-from typing import List
-import math
-
 from hw2.entities.environment import Environment
-from hw2.entities.base import Agent
-from hw2.entities.agent import Boid
 from hw2.common import *
 
 current = None
 lag = 0.0
 ticks, fps = 0, 0
 
-
-# configuration = config.GameConfiguration()
 
 
 def init_screen():
@@ -32,13 +24,7 @@ def quit():
 
 
 def main():
-	global elapsed
-	global previous
-
 	pygame.init()
-	# clock = pygame.time.Clock()
-	# main_surface = pygame.display.set_mode(configuration.SCREEN_SIZE)
-	# pygame.display.set_caption(configuration.TITLE)
 
 	running = True
 	screen = init_screen()
@@ -50,7 +36,6 @@ def main():
 		environment.add_obstacle(i, SCREEN_SIZE - 10)
 		environment.add_obstacle(i, 10)
 
-	# Used to manage how fast the screen updates
 	clock = pygame.time.Clock()
 
 	while running:
@@ -68,14 +53,13 @@ def main():
 					mouse = pygame.mouse.get_pos()
 					environment.add_obstacle(mouse[0], mouse[1])
 
-				# print(pygame.mouse.get_pos())
+				print("obstacles_nr = ", environment.obstacle_nr, "boids_nr = ", environment.boid_nr)
 
 		screen.fill(WHITE)
 
 		for agent in environment.agents:
 			if agent.name == BOID_NAME:
-				agent.check_collision(environment.agents)
-				agent.apply_rules(environment.agents)
+				agent.update_position(environment.agents)
 
 			agent.draw()
 

@@ -11,18 +11,13 @@ vec = pygame.math.Vector2
 
 class Boid(Agent):
 
-	def __init__(self, screen, x, y, name, radius, direction):
+	def __init__(self, screen, x, y, name, radius):
 		super().__init__(screen, x, y, name, radius)
-		self.direction = direction
-		self.speed = 1
-		self.nr_ticks = 0
 		self.position = vec(x, y)
 		self.velocity = vec(uniform(-1, 1), uniform(-1, 1))
-		self.acceleration = vec(0.1, 0.1)
-		self.angle = 0
-		self.max_force = 0.3
-		self.max_speed = 7
-		self.perception = 70
+		self.acceleration = 0.3
+		self.max_speed = 5
+		self.perception = 50
 
 	def check_collision(self, observation: List[Agent]):
 		for agent in observation:
@@ -36,6 +31,7 @@ class Boid(Agent):
 	def align(self, agents: List[Agent]):
 		avg_vec = vec(0, 0)
 		count = 0
+
 		for agent in agents:
 			if agent.name == BOID_NAME and agent != self:
 				if np.linalg.norm(agent.position - self.position) < self.perception:
@@ -43,13 +39,12 @@ class Boid(Agent):
 					count += 1
 
 		if count > 0:
-			avg_vec = (avg_vec / np.linalg.norm(avg_vec)) * self.max_speed
-			avg_vec -= self.velocity
+			avg_vec /= count
+			avg_vec /= np.linalg.norm(avg_vec)
 
 		return avg_vec
 
 	def cohesion(self, agents: List[Agent]):
-		steering = vec(0, 0)
 		count = 0
 		avg_position = vec(0, 0)
 
@@ -60,36 +55,25 @@ class Boid(Agent):
 					count += 1
 
 		if count > 0:
-			temp_vec = avg_position / count - self.position
-			if np.linalg.norm(temp_vec) > 0:
-				temp_vec = (temp_vec / np.linalg.norm(temp_vec)) * self.max_speed
+			avg_position /= count
+			avg_position -= self.position
+			avg_position /= np.linalg.norm(avg_position)
 
-			steering = temp_vec - self.velocity
-
-			if np.linalg.norm(steering) > self.max_force:
-				steering = (steering / np.linalg.norm(steering)) * self.max_force
-
-		return steering
+		return avg_position
 
 	def separation(self, agents: List[Agent]):
-		count = 0
 		avg_vector = vec(0, 0)
+
 		for agent in agents:
 			if agent != self:
 				distance = np.linalg.norm(agent.position - self.position)
-				if self.position != agent.position and distance < self.perception:
+
+				if distance < self.perception:
 					avg_vector += (self.position - agent.position) / distance
-					count += 1
 
 		return avg_vector
 
-	def apply_rules(self, agents: List[Agent]):
-		self.acceleration += self.align(agents)
-		self.acceleration += self.cohesion(agents)
-		self.acceleration += self.separation(agents)
-
 	def draw(self):
-		self.update_position()
 		pygame.draw.polygon(self.screen, GREEN, self.draw_triangle())
 
 	def draw_triangle(self):
@@ -110,12 +94,16 @@ class Boid(Agent):
 
 		return [p1, p2, p3]
 
-	def update_position(self):
+	def update_position(self, agents: List[Agent]):
+
+		self.velocity += self.separation(agents)
+		self.velocity += self.cohesion(agents)
+		self.velocity += self.align(agents)
+
+		self.check_collision(agents)
+
 		self.position += self.velocity
-		self.velocity += self.acceleration
-		# limit
+		self.velocity += self.velocity * (self.acceleration / np.linalg.norm(self.velocity))
 
 		if np.linalg.norm(self.velocity) > self.max_speed:
 			self.velocity = self.velocity / np.linalg.norm(self.velocity) * self.max_speed
-
-		self.acceleration = vec(0, 0)
