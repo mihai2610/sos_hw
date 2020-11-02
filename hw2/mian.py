@@ -2,11 +2,11 @@ import pygame
 import sys
 from hw2.entities.environment import Environment
 from hw2.common import *
+from random import uniform
 
 current = None
 lag = 0.0
 ticks, fps = 0, 0
-
 
 
 def init_screen():
@@ -35,6 +35,9 @@ def main():
 		environment.add_obstacle(SCREEN_SIZE - 10, i)
 		environment.add_obstacle(i, SCREEN_SIZE - 10)
 		environment.add_obstacle(i, 10)
+
+	for i in range(20):
+		environment.add_boid(uniform(0, 750), uniform(0, 750))
 
 	clock = pygame.time.Clock()
 
