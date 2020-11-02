@@ -1,4 +1,4 @@
-from hw2.entities.agent import Boid
+from hw2.entities.boid import Boid
 from hw2.entities.obstacle import Obstacle
 from hw2.entities.base import Agent
 from hw2.common import *
