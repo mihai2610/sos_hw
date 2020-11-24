@@ -134,3 +134,4 @@ dmypy.json
 *.zip
 /.idea/
 /hw1/.idea/
+/hw3/doc
